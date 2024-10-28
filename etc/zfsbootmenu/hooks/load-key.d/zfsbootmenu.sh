@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Need to add this binaries to zfsbootmenu initcpio:
+# argon2 xxd dialog
+
 export DIALOGRC=/etc/zfsbootmenu/.dialogrc
 export SALT=abcd1234
 
