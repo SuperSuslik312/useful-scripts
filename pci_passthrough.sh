@@ -3,6 +3,10 @@
 TEMP_FILE="/tmp/reboot_confirmation_needed"
 CONFIRMATION_TIMEOUT=10 # in seconds
 REBOOT_TIMEOUT=5
+CMDLINE=$(cat /proc/cmdline)
+PARAM="vfio-pci.ids"
+VALUE="10de:1f99,10de:10fa"
+KERNEL_NAME="linux-cachyos"
 
 if [ $EUID -ne "0" ]; then
     echo "Нужны права рут!"
@@ -15,11 +19,6 @@ if [ -f "$TEMP_FILE" ]; then #
 
     if [ "$FILE_AGE" -le "$CONFIRMATION_TIMEOUT" ]; then
         rm "$TEMP_FILE"
-        PARAM="vfio-pci.ids"
-        VALUE="10de:1f99,10de:10fa"
-        KERNEL_NAME="linux-cachyos"
-
-        CMDLINE=$(cat /proc/cmdline)
 
         if echo "$CMDLINE" | grep -qE " ${PARAM}="; then
             NEW_CMDLINE=$(echo "$CMDLINE" | sed "s/${PARAM}=[^ ]*//g")
@@ -40,7 +39,11 @@ if [ -f "$TEMP_FILE" ]; then #
     fi
 else
     touch "$TEMP_FILE"
-    hyprctl notify -1 ${CONFIRMATION_TIMEOUT}000 "rgb(ffff00)" "fontsize:24 Подтвердите перезагрузку пока видно это уведомление..."
+    if echo "$CMDLINE" | grep -qE " ${PARAM}="; then
+        hyprctl notify -1 ${CONFIRMATION_TIMEOUT}000 "rgb(ffff00)" "fontsize:24 Подтвердите перезагрузку с драйверами NVIDIA пока видно это уведомление..."
+    else
+        hyprctl notify -1 ${CONFIRMATION_TIMEOUT}000 "rgb(ffff00)" "fontsize:24 Подтвердите перезагрузку с драйверами VFIO пока видно это уведомление..."
+    fi
 fi
 
 exit 0
