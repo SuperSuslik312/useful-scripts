@@ -21,13 +21,13 @@ if [ -f "$TEMP_FILE" ]; then #
         rm "$TEMP_FILE"
 
         if echo "$CMDLINE" | grep -qE " ${PARAM}="; then
-            NEW_CMDLINE=$(echo "$CMDLINE" | sed "s/${PARAM}=[^ ]*//g")
+            NEW_CMDLINE=$(echo "$CMDLINE" | sed "s/ ${PARAM}=[^ ]*//g;s/ module_blacklist=[^ ]*//g")
             hyprctl notify -1 ${REBOOT_TIMEOUT}000 "rgb(00ff00)" "fontsize:24 Перезагрузка с драйверами NVIDIA через ${REBOOT_TIMEOUT} сек..."
             sleep $REBOOT_TIMEOUT
             kexec -l /boot/vmlinuz-$KERNEL_NAME --initrd=/boot/initramfs-$KERNEL_NAME.img --append="${NEW_CMDLINE}"
             systemctl kexec
         else
-            NEW_CMDLINE="$CMDLINE ${PARAM}=${VALUE}"
+            NEW_CMDLINE="$CMDLINE ${PARAM}=${VALUE} module_blacklist=nvidia,nvidia_uvm,nvidia_drm,nvidia_modeset"
             hyprctl notify -1 ${REBOOT_TIMEOUT}000 "rgb(00b2ff)" "fontsize:24 Перезагрузка с драйверами VFIO через ${REBOOT_TIMEOUT} сек..."
             sleep $REBOOT_TIMEOUT
             kexec -l /boot/vmlinuz-$KERNEL_NAME --initrd=/boot/initramfs-$KERNEL_NAME.img --append="${NEW_CMDLINE}"
