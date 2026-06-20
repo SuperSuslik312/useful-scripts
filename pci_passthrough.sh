@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TEMP_FILE="/tmp/reboot_confirmation_needed"
+TEMP_FILE="/run/reboot_confirmation_needed"
 CONFIRMATION_TIMEOUT=10 # in seconds
 REBOOT_TIMEOUT=5
 CMDLINE=$(cat /proc/cmdline)
