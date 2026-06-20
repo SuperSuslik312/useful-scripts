@@ -5,7 +5,7 @@
 #include <algorithm>
 
 void sendHyprlandNotification(const std::string& info, const std::string& message) {
-    std::string command = "hyprctl notify " + info + " 3000 \"0\" \"fontsize:24   " + message + "\"";
+    std::string command = "/usr/bin/hyprctl notify " + info + " 3000 \"0\" \"fontsize:24   " + message + "\"";
     system(command.c_str());
 }
 
