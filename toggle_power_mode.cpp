@@ -89,7 +89,7 @@ void togglePerformanceMode() {
         return;
     }
 
-    int nextMode;
+    int nextMode = currentMode;
 
     if (pluggedIn) {
         nextMode = (currentMode + 1) % 3;
@@ -97,6 +97,8 @@ void togglePerformanceMode() {
         if (currentMode == 0) {
             nextMode = 2;
         } else if (currentMode == 2) {
+            nextMode = 0;
+        } else {
             nextMode = 0;
         }
     }
